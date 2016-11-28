@@ -1,0 +1,23 @@
+{
+  "name": "fgc-query",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+   "engines": {
+    "node": "6.8.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danielnormandia/fgc-query.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/danielnormandia/fgc-query/issues"
+  },
+  "homepage": "https://github.com/danielnormandia/fgc-query#readme"
+}
