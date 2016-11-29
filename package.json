@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
-   "engines": {
+  "engines": {
     "node": "6.8.1"
   },
   "scripts": {
@@ -19,5 +19,14 @@
   "bugs": {
     "url": "https://github.com/danielnormandia/fgc-query/issues"
   },
-  "homepage": "https://github.com/danielnormandia/fgc-query#readme"
+  "homepage": "https://github.com/danielnormandia/fgc-query#readme",
+  "dependencies": {
+    "bcrypt": "^0.8.7",
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "express-session": "^1.14.2",
+    "method-override": "^2.3.7",
+    "mustache-express": "^1.2.4",
+    "pg-promise": "^5.4.4"
+  }
 }
