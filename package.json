@@ -27,6 +27,7 @@
     "express-session": "^1.14.2",
     "method-override": "^2.3.7",
     "mustache-express": "^1.2.4",
-    "pg-promise": "^5.4.4"
+    "pg-promise": "^5.4.4",
+    "request": "^2.79.0"
   }
 }

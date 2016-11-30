@@ -1,10 +1,12 @@
+// require engines/packages
 var express = require("express");
 var app = express();
 var pgp = require('pg-promise')();
 var mustacheExpress = require('mustache-express');
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
-var db = pgp(process.env.DATABASE_URL ||'postgres://danielanormandia@localhost:5432/');
+var request = require('request');
+var db = pgp(process.env.DATABASE_URL ||'postgres://danielanormandia@localhost:5432/fgc_query');
 var port = process.env.PORT || 3000;
 
 var session = require('express-session');
@@ -27,20 +29,46 @@ app.use(session({
   cookie: { secure: false }
 }))
 
-app.listen(port, function() {
+app.listen(port, function() {   //port awareness function
   console.log('Site is live on port 3000');
 });
 
-app.get('/home', function(req, res) {
+var player_name =
+
+app.get('/data', function(req, res) {   //convert api data for ajax access
+  var api = 'http://rank.shoryuken.com/api/player/name/' + player_name;
+  request(api, function(err, resp, body) {
+    var body = JSON.parse(body);
+    console.log(body[0].name);
+    res.send(body);
+  })
+})
+
+app.get('/', function(req, res) { // display home page
     var data = {
       'logged_in': false,
       'email': 'test@test.com'
     }
-
     res.render('home', data);
-})
+});
 
-app.post('/login', function(req, res) {
+app.get('/signup', function(req, res) { //registration page
+  res.render('signup/register');
+});
+
+app.get('/player', function(req, res) {
+  res.render('player');
+});
+
+app.get('/tournament', function(req, res) {
+  res.render('tournament');
+});
+
+app.get('/user-history', function(req, res) {
+  res.render('user-history')
+});
+
+app.post('/login', function(req, res) { //bcrypt login comparison shown by Bryan
   var data = req.body;
   db.one(
     "SELECT * FROM users WHERE email = $1",
@@ -53,7 +81,7 @@ app.post('/login', function(req, res) {
     bcrypt.compare(data.password, user.password_digest, function(err, cmp) {
     if (cmp) {
         req.session.user = user;
-        res.redirect('/home');
+        res.redirect('/');
     } else {
       res.send('Auth Failed. Check email/password.')
     }
@@ -61,16 +89,12 @@ app.post('/login', function(req, res) {
   })
 })
 
-app.get('/signup', function(req, res) {
-  res.render('signup/register');
-})
-
-app.post('/signup', function(req, res) {
+app.post('/signup', function(req, res) {  //salting passwords on signup with bcrypt
   var data = req.body;
   bcrypt.hash(data.password, 10, function(err, hash) {
     db.none(
-      "INSERT INTO users (name, email, joinDate, password_digest) VALUES ($1, $2, $3, $4)",
-      [data.name, data.email, NOW(), hash]
+      "INSERT INTO users (name, email, joinDate, password_digest) VALUES ($1, $2, now(), $3)",
+      [data.name, data.email, hash]
     )
     .catch(function (user) {
       res.send('Error. User could not be created');
