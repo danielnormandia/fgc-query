@@ -1,3 +1,10 @@
-body {
-
+.main-container {
+  width: 980px;
+  margin: 0 auto;
 }
+
+h1 {
+  text-align: center;
+}
+
+.center-block { float: none }
