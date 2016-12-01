@@ -1,12 +1,12 @@
 // require engines/packages
-var express = require("express");
+var express = require('express');
 var app = express();
 var pgp = require('pg-promise')();
 var mustacheExpress = require('mustache-express');
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
 var request = require('request');
-var db = pgp(process.env.DATABASE_URL ||'postgres://danielanormandia@localhost:5432/fgc_query');
+var db = pgp(process.env.DATABASE_URL || 'postgres://danielanormandia@localhost:5432/fgc_query');
 var port = process.env.PORT || 3000;
 
 var session = require('express-session');
@@ -27,29 +27,70 @@ app.use(session({
   resave: false,
   saveUninitialized: true,
   cookie: { secure: false }
-}))
+}));
 
 app.listen(port, function() {   //port awareness function
   console.log('Site is live on port 3000');
 });
 
-var player_name =
 
-app.get('/data', function(req, res) {   //convert api data for ajax access
-  var api = 'http://rank.shoryuken.com/api/player/name/' + player_name;
-  request(api, function(err, resp, body) {
-    var body = JSON.parse(body);
-    console.log(body[0].name);
-    res.send(body);
-  })
-})
 
-app.get('/', function(req, res) { // display home page
-    var data = {
-      'logged_in': false,
-      'email': 'test@test.com'
-    }
-    res.render('home', data);
+app.get('/pData/:name', function(req, res) {
+  var data = req.params.name;
+  db.none(
+    "INSERT INTO queries (user_id, term, searchTime, type) VALUES ($1, $2, now(), 'P')",
+    [req.session.user.id, data]
+    )
+    .catch(function (user) {
+      res.send('Cannot post query');
+    })
+    .then(function(user) {
+      var playName = req.params.name;
+      var result = {
+        url: 'http://rank.shoryuken.com/api/player/name/' + playName
+      };
+      request(result, function(err, resp, body) {
+        var body = JSON.parse(body);
+        res.send(body);
+      });
+  });  //convert api data for ajax access
+});
+
+app.get('/tData/:name', function(req, res) {
+  var data = req.body;
+  db.none(
+    "INSERT INTO queries (user_id, term, searchTime, type) VALUES ($1, $2, now(), 'T')",
+    [req.session.user.id, data]
+    )
+    .catch(function (user) {
+      res.send('Cannot post query');
+    })
+    .then(function(user) {
+      var tourneyName = req.params.name;
+      var result = {
+        url: 'http://rank.shoryuken.com/api/tournament/name/' + result
+      }
+      request(result, function(err, resp, body) {
+        var body = JSON.parse(body);
+        res.send(body);
+      });
+    });
+});
+
+app.get('/', function(req, res) {
+  var logged_in;
+  var email;
+  var user = req.session.user;
+  if (user) {
+    logged_in = true;
+    email = req.session.user.email;
+  }
+  var data = {
+    "logged_in": logged_in,
+    "email": email
+  }
+  console.log(data)
+  res.render('home', data);
 });
 
 app.get('/signup', function(req, res) { //registration page
@@ -83,11 +124,15 @@ app.post('/login', function(req, res) { //bcrypt login comparison shown by Bryan
         req.session.user = user;
         res.redirect('/');
     } else {
-      res.send('Auth Failed. Check email/password.')
-    }
-    })
-  })
-})
+      res.send('Auth Failed. Check email/password.');
+    };
+    });
+  });
+});
+
+app.post('player', function(req, res) {
+
+});
 
 app.post('/signup', function(req, res) {  //salting passwords on signup with bcrypt
   var data = req.body;
@@ -101,11 +146,23 @@ app.post('/signup', function(req, res) {  //salting passwords on signup with bcr
     })
     .then( function() {
       res.send('User created');
+    });
+  });
+});
+
+app.post('/query', function(req, res) {
+  var data = req.body;
+  db.none(
+    "INSERT INTO queries (user_id, term, searchTime) VALUES ( , $1, now())",
+    [data.id,     ]
+    )
+    .catch(function (user) {
+      res.send('Cannot post query');
     })
-  })
-})
+    .then(function(user) {
 
-
+    });
+});
 
 
 
