@@ -12,6 +12,7 @@ CREATE TABLE Users (
 CREATE TABLE queries(
    user_id REFERENCES users,
    term VARCHAR(255) NOT NULL,
-   searchTime timestamp NOT NULL
+   searchTime timestamp NOT NULL,
+   type VARCHAR(1) NOT NULL
    )
 
