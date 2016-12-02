@@ -10,25 +10,24 @@
 
 <div class="main-container">    <!-- html alongside bcrypt (from Bryan labwork) -->
       <div class="border-container">
-        <h1>FGC <a href="/player">Player</a>/<a href="/tournament">Tournament</a> Search</h1>
+        <h1>FGC <a href="/player">Player</a> / <a href="/tournaments">Tournaments</a> Search</h1>
         <br>
         {{#logged_in}}
         <div class="col-lg-6 center-block">
           <div class="alert alert-dismissible alert-warning">
             <h4>Welcome {{email}}!</h4>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi aliquam tellus vitae nulla tristique, quis laoreet nulla fringilla.</p>
+            <p>Want to find information on a player of tournament? You came to the right place! Just click on the player or tournaments link to start!</p>
           </div>
-          <blockquote class="blockquote-reverse">
-            <p>"If debugging is the process of removing software bugs,
-            then programming must be the process of putting them in."</p>
-            <small>Edsger Dijkstra</cite></small>
-          </blockquote>
+          <a href="/userInfo">User Page</a>
           <a href="/logout">Logout!</a>
         </div>
         {{/logged_in}}
         {{^logged_in}}
         <div class="col-lg-6 center-block">
           <div class="well bs-component">
+            <p>Want to find information on a player of tournament? You came to the right place! Just click on the player or tournaments link to start!</p>
+            <br>
+            <p>If your new and want an account, you may start a new account at the link below. If you are already a user, welcome back! Login Below.</p>
             <form class="form-horizontal" action="/login" method="post">
               <fieldset>
                 <legend>Login</legend>
