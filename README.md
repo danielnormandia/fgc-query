@@ -35,7 +35,7 @@ Unsolved problems:
    Much more css (too bare bones)
    
 ![Wireframe]
-(wireframe.jpg)
+(Wireframe.jpg)
 
 ![Early Planning and Api Flow]
 (Early Planning.jpg)
