@@ -34,8 +34,7 @@ Unsolved problems:
    Adding User Search History functionality 
    Much more css (too bare bones)
    
-[Wireframe]
-(Wireframe.jpg)
+![Wireframe](Wireframe.jpg)
 
 [Early Planning and Api Flow]
 (Early Planning.jpg)
