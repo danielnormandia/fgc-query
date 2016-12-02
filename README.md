@@ -34,10 +34,11 @@ Unsolved problems:
    Adding User Search History functionality 
    Much more css (too bare bones)
    
-![Wireframe](Wireframe.jpg)
+![Wireframe]
+(Wireframe.png)
 
 [Early Planning and Api Flow]
-(Early Planning.jpg)
+(Early Planning.png)
 
 ![Erd Diagram of Users and Queries]
 (erdplus-diagram.png)
