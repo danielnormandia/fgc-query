@@ -33,61 +33,87 @@ app.listen(port, function() {   //port awareness function
   console.log('Site is live on port 3000');
 });
 
-
+// var happyFunction = function(playerInfo) {
+//     request(playerInfo, function(err, resp, body) {
+//       var body = JSON.parse(body);
+//       res.send(body);
+//     });
+// };
 
 app.get('/pData/:name', function(req, res) {
   var data = req.params.name;
+  var result = {
+    url: 'http://rank.shoryuken.com/api/player/name/' + data
+  };
+  if(req.session.user){
   db.none(
     "INSERT INTO queries (user_id, term, searchTime, type) VALUES ($1, $2, now(), 'P')",
     [req.session.user.id, data]
     )
-    .catch(function (user) {
-      res.send('Cannot post query');
-    })
-    .then(function(user) {
-      var playName = req.params.name;
-      var result = {
-        url: 'http://rank.shoryuken.com/api/player/name/' + playName
-      };
-      request(result, function(err, resp, body) {
-        var body = JSON.parse(body);
-        res.send(body);
-      });
-  });  //convert api data for ajax access
-});
-
-app.get('/tData/:name', function(req, res) {
-  var data = req.body;
-  db.none(
-    "INSERT INTO queries (user_id, term, searchTime, type) VALUES ($1, $2, now(), 'T')",
-    [req.session.user.id, data]
-    )
-    .catch(function (user) {
-      res.send('Cannot post query');
-    })
-    .then(function(user) {
-      var tourneyName = req.params.name;
-      var result = {
-        url: 'http://rank.shoryuken.com/api/tournament/name/' + result
-      }
+    .then(function() {
       request(result, function(err, resp, body) {
         var body = JSON.parse(body);
         res.send(body);
       });
     });
+  } else{
+      request(result, function(err, resp, body) {
+        var body = JSON.parse(body);
+        res.send(body);
+      });
+    };
+});
+
+
+app.get('/tsData/:name', function(req, res) {
+  var data = req.params.name;
+  var result = {
+    url: 'http://rank.shoryuken.com/api/search?type=tournament&fuzzy=true&query=' + data
+  };
+  if (req.session.user) {
+  db.none(
+    "INSERT INTO queries (user_id, term, searchTime, type) VALUES ($1, $2, now(), 'T')",
+    [req.session.user.id, data]
+    )
+    .then(function() {
+      request(result, function(err, resp, body) {
+        var body = JSON.parse(body);
+        res.send(body);
+      });
+    });
+  } else {
+      request(result, function(err, resp, body) {
+        var body = JSON.parse(body);
+        res.send(body);
+      });
+    }
+});
+
+app.get('/tData/:name', function(req, res) {
+  var data = req.params.name;
+  var result = {
+    url: 'http://rank.shoryuken.com/api/tournament/name/' + data
+  }
+  request(result, function(err, resp, body) {
+    var body = JSON.parse(body);
+    res.send(body);
+  })
 });
 
 app.get('/', function(req, res) {
   var logged_in;
   var email;
+  var id;
   var user = req.session.user;
   if (user) {
     logged_in = true;
     email = req.session.user.email;
+    id= req.session.user.id;
   }
   var data = {
     "logged_in": logged_in,
-    "email": email
+    "email": email,
+    "id": id
   }
   console.log(data)
   res.render('home', data);
@@ -101,11 +127,15 @@ app.get('/player', function(req, res) {
   res.render('player');
 });
 
+app.get('/tournaments', function(req, res) {
+  res.render('tournaments');
+});
+
 app.get('/tournament', function(req, res) {
   res.render('tournament');
 });
 
-app.get('/user-history', function(req, res) {
+app.get('/userInfo', function(req, res) {
   res.render('user-history')
 });
 
@@ -150,21 +180,10 @@ app.post('/signup', function(req, res) {  //salting passwords on signup with bcr
   });
 });
 
-app.post('/query', function(req, res) {
-  var data = req.body;
-  db.none(
-    "INSERT INTO queries (user_id, term, searchTime) VALUES ( , $1, now())",
-    [data.id,     ]
-    )
-    .catch(function (user) {
-      res.send('Cannot post query');
-    })
-    .then(function(user) {
-
-    });
-});
-
-
+app.get('/logout', function(req,res){ //credit:helped by Glenn Basgaard
+  req.session.user = null;
+  res.redirect('/')
+})
 
 
 
