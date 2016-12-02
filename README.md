@@ -35,10 +35,10 @@ Unsolved problems:
    Much more css (too bare bones)
    
 ![Wireframe]
-(Wireframe.png)
+(wireframe.png)
 
 [Early Planning and Api Flow]
-(Early Planning.png)
+(earlyPlanning.png)
 
 ![Erd Diagram of Users and Queries]
 (erdplus-diagram.png)
