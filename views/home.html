@@ -9,12 +9,12 @@
 <body>
 
 <div class="main-container">    <!-- html alongside bcrypt (from Bryan labwork) -->
-      <div class="border-container">
+      <div>
         <h1>FGC <a href="/player">Player</a> / <a href="/tournaments">Tournaments</a> Search</h1>
         <br>
         {{#logged_in}}
-        <div class="col-lg-6 center-block">
-          <div class="alert alert-dismissible alert-warning">
+        <div>
+          <div>
             <h4>Welcome {{email}}!</h4>
             <p>Want to find information on a player of tournament? You came to the right place! Just click on the player or tournaments link to start!</p>
           </div>
@@ -23,8 +23,8 @@
         </div>
         {{/logged_in}}
         {{^logged_in}}
-        <div class="col-lg-6 center-block">
-          <div class="well bs-component">
+        <div>
+          <div>
             <p>Want to find information on a player of tournament? You came to the right place! Just click on the player or tournaments link to start!</p>
             <br>
             <p>If your new and want an account, you may start a new account at the link below. If you are already a user, welcome back! Login Below.</p>
